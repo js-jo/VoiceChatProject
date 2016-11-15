@@ -19,7 +19,7 @@ public class VoiceCapture extends Thread
 	
 	public void run()
 	{
-		
+		//기능 구현
 	}
 	
 	private AudioFormat getFormat() 
