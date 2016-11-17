@@ -1,4 +1,4 @@
-package kr.oss.sunmoon;
+package project.oss.sunmoon;
 
 import java.io.*; //클라이언트, 서버를 사용하는 소켓 선언
 import java.net.*; //네트워크 소켓선언
@@ -25,7 +25,8 @@ public class AudioClient{
 			socket.send(sendpacket); //패킷 전송
 			
 			DatagramPacket receivepacket = new DatagramPacket(receive, receive.length);
-			socket.receive(receivepacket);
+			//각 정보를 수신
+			socket.receive(receivepacket); //패킷 수신
 		}
 		
 		catch(IOException e){ //예외
