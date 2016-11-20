@@ -26,12 +26,13 @@ public class VoiceCaptureThread extends Thread
 		return buffer;
 	}
 
+
 	public VoiceCaptureThread() throws LineUnavailableException
 	{
 		line.open(format);
 		line.start();
 	}
-	
+	                           
 	public void run()
 	{
 		//기능 구현
