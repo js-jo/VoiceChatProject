@@ -17,7 +17,7 @@ public class data_Receiver
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
 	byte[] inSound;
-	SourceDataLine inSpeaker = null; //바이트의 버퍼링을 처리하여 믹서에 전달
+	SourceDataLine inSpeaker = null;
 
 	public data_Receiver(){
 		try{
