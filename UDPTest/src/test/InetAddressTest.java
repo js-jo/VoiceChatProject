@@ -1,5 +1,6 @@
 package test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,13 +10,14 @@ import java.net.UnknownHostException;
 
 public class InetAddressTest 
 {
+	private static ByteArrayOutputStream msg;
 	public static void main(String[] args)
 	{
 		try {
+			msg = new ByteArrayOutputStream();
 			InetAddress ip = InetAddress.getByName("127.0.0.1");
 			DatagramSocket socket = new DatagramSocket();
-			String msg = "°Ç¾Æ ¾È³ç";
-			byte[] buf = msg.getBytes();
+			byte[] buf = msg.toByteArray();
 			int port = 10000;
 			DatagramPacket p = new DatagramPacket(buf, buf.length, ip, port);
 			socket.send(p);
@@ -28,4 +30,12 @@ public class InetAddressTest
 			e.printStackTrace();
 		}
 	}
+	public ByteArrayOutputStream getMsg() {
+		return msg;
+	}
+	public void setMsg(ByteArrayOutputStream msg) {
+		this.msg = msg;
+	}
+	
+	
 }
