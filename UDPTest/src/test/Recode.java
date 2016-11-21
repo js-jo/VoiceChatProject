@@ -72,20 +72,22 @@ public class Recode extends JFrame {
 			Runnable runner = new Runnable() {
 				int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
 				byte buffer[] = new byte[bufferSize];
-
+				
 				public void run() {
 					out = new ByteArrayOutputStream();
 					running = true;
+					
 					try {
 						while (running) {
 							int count = line.read(buffer, 0, buffer.length);
 							if (count > 0) {
+								InetAddressTest msg = new InetAddressTest();
+								msg.setBufferSize(bufferSize);
+								msg.setBuf(buffer);
 								out.write(buffer, 0, count);
 							}
 						}
 						out.close();
-						InetAddressTest msg = new InetAddressTest();
-						msg.setMsg(out);
 					} catch (IOException e) {
 						System.err.println("I/O problems: " + e);
 						System.exit(-1);
