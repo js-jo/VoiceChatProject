@@ -16,22 +16,15 @@ public class UdpReceiver
 			socket = new DatagramSocket(port);
 			byte[] msg = new byte[512];
 			
-			DatagramPacket p = new DatagramPacket(msg, msg.length);
+			
 			System.out.println("수신 대기중 ... ");
 			while(flag)
 			{
-				Thread.sleep(1000);
+				DatagramPacket p = new DatagramPacket(msg, msg.length);
 				socket.receive(p);
-				System.out.println("수신 완료");
-				System.out.println("ip : " + p.getAddress());
-				System.out.println("수신 내용  : " + new String(msg));
+				System.out.println(new String(msg));
 			}
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

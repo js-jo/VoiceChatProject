@@ -81,10 +81,9 @@ public class Recode extends JFrame {
 						while (running) {
 							int count = line.read(buffer, 0, buffer.length);
 							if (count > 0) {
-								InetAddressTest msg = new InetAddressTest();
-								msg.setBufferSize(bufferSize);
-								msg.setBuf(buffer);
+								InetAddressTest msg = new InetAddressTest(buffer, bufferSize);
 								out.write(buffer, 0, count);
+								System.out.println("¿Ã∞≈æﬂ " + buffer.toString());
 							}
 						}
 						out.close();
