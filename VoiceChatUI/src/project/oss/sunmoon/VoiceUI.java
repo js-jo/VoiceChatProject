@@ -19,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -41,9 +42,10 @@ public class VoiceUI extends JFrame {
 	private JPanel contentPane;
 	private JPanel panel_1;
 	private JPanel panel_2;
-	private JTextField iptext;
+	private HintTextField iptext;
 	private JButton btnNewButton;
 	private JPanel panel_3;
+	private JLabel hint;
 	private boolean flag = false;		
 	
 	/**
@@ -81,67 +83,18 @@ public class VoiceUI extends JFrame {
 		northPanel.add(ipPanel);
 		ipPanel.setLayout(new BorderLayout(5, 10));
 		
-		iptext = new JTextField();
+		iptext = new HintTextField("아이피를 입력해주세요");
 		ipPanel.add(iptext);
-
 		iptext.setColumns(20);
-		iptext.addFocusListener(new FocusListener(){
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				// TODO Auto-generated method stub
-				String str = iptext.getText();
-				if(!flag)
-				{
-					if(str.compareTo("") == 0)
-					{
-						iptext.setText("아이피를 입력하세요");
-					}
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				// TODO Auto-generated method stub
-			}});
-	
-		iptext.getDocument().addDocumentListener(new DocumentListener(){
-
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				// TODO Auto-generated method stub
-				if(!flag)
-				{
-					flag = true;
-				}
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				// TODO Auto-generated asmethod stub
-				System.out.println("assdfsdfsdfdf");
-				if(flag)
-				{
-					String str = iptext.getText();
-					if(str == "")
-					{
-						flag = false;
-					}
-				}
-			}});
 		
+		
+	
 		JPanel panel_5 = new JPanel();
 		ipPanel.add(panel_5, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
 		
 		JButton connectBtn = new JButton("Connect");
-		panel_5.add(connectBtn);
+		panel_5.add(connectBtn, BorderLayout.NORTH);
 		
 		JButton disconnectBtn = new JButton("Disconnect");
 		panel_5.add(disconnectBtn, BorderLayout.SOUTH);
