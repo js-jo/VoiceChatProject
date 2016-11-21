@@ -10,8 +10,8 @@ import java.net.UnknownHostException;
 
 public class InetAddressTest 
 {
-	private static ByteArrayOutputStream msg;
-	public static void main(String[] args)
+	private ByteArrayOutputStream msg;
+	public InetAddressTest()
 	{
 		try {
 			msg = new ByteArrayOutputStream();

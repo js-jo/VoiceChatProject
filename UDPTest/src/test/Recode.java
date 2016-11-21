@@ -21,6 +21,18 @@ public class Recode extends JFrame {
 		capture.setEnabled(true);
 		stop.setEnabled(false);
 		play.setEnabled(false);
+		Runnable stayRunner = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				UdpReceiver receiver = new UdpReceiver();
+			}
+		};
+		
+		Thread staySendThread = new Thread(stayRunner);
+		staySendThread.start();
+		
 		ActionListener captureListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				capture.setEnabled(false);
