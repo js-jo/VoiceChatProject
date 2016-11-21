@@ -8,7 +8,7 @@ import java.net.SocketException;
 public class UdpReceiver 
 {
 	 private boolean flag = true;
-	 final int port = 10000;
+	 final int port = 9000;
 	 DatagramSocket socket;
 	 public UdpReceiver()
 	 {

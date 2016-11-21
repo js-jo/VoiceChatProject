@@ -16,7 +16,7 @@ public class InetAddressTest
 			ByteArrayOutputStream msg = new ByteArrayOutputStream();
 			InetAddress ip = InetAddress.getByName("127.0.0.1");
 			DatagramSocket socket = new DatagramSocket();
-			int port = 10000;
+			int port = 9000;
 			DatagramPacket p = new DatagramPacket(buf, bufferSize, ip, port);
 			socket.send(p);
 		} catch (Exception e) {
