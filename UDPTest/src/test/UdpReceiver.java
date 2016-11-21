@@ -7,12 +7,12 @@ import java.net.SocketException;
 
 public class UdpReceiver 
 {
-	
-	public static void main(String[] args)
-	{
+	 final int port = 10000;
+	 DatagramSocket socket;
+	 public UdpReceiver()
+	 {
 		try{
-			int port = 10000;
-			DatagramSocket socket = new DatagramSocket(port);
+			socket = new DatagramSocket(port);
 			byte[] msg = new byte[512];
 			
 			DatagramPacket p = new DatagramPacket(msg, msg.length);
