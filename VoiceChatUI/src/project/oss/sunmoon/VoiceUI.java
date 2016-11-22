@@ -140,13 +140,14 @@ public class VoiceUI extends JFrame {
 				String ip = iptext.getText();
 				if(PATTERN.matcher(ip).matches())
 				{
+					statePanel.removeAll();
 					connectBtn.setEnabled(false);
 					disconnectBtn.setEnabled(true);
 					iptext.setEditable(false);
 					
 					//statePanel.removeAll();
 					JLabel lblState = new JLabel();
-					lblState.setText(iptext.getText() + "\n");
+					lblState.setText("Connected with " + iptext.getText() + "\n");
 					statePanel.add(lblState);
 					statePanel.validate();
 					statePanel.repaint();		
@@ -154,7 +155,7 @@ public class VoiceUI extends JFrame {
 				else
 				{
 					JLabel lblState = new JLabel();
-					lblState.setText("잘못입력.");
+					lblState.setText("Non IP.");
 					statePanel.add(lblState);
 					statePanel.validate();
 					statePanel.repaint();
