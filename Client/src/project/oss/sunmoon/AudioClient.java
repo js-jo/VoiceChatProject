@@ -19,6 +19,7 @@ public class AudioClient{
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
 		DatagramSocket socket = null;
+		@SuppressWarnings("unused")
 		AudioClient audio = new AudioClient();
 	}
 
@@ -26,17 +27,21 @@ public class AudioClient{
 		//boolean stopaudioCapture = false; //오디오 멈춤
 
 		try{
-			int port = 7000;
-			byte[] message ="oh".getBytes(); //전송할 데이터
-			InetAddress ip = InetAddress.getByName("210.119.34.106"); //전송할 ip번호
-			DatagramPacket sendpacket = new DatagramPacket(message, message.length, ip, port);
-			//주고 받을 데이터와 관련 클래스
-			DatagramSocket socket = new DatagramSocket();
-			//데이터 송수신 클래스
-			socket.send(sendpacket); 
-			//패킷 전송
-			socket.close(); 
-			//소켓 종료
+			int port = 7001;
+			while(true)
+			{
+				String str = "전송";
+				byte[] message = str.getBytes(); //전송할 데이터
+				InetAddress ip = InetAddress.getByName("210.119.34.106"); //전송할 ip번호
+				DatagramSocket socket = new DatagramSocket();
+				//데이터 송수신 클래스
+				DatagramPacket sendpacket = new DatagramPacket(message, message.length, ip, port);
+				//주고 받을 데이터와 관련 클래스
+				socket.send(sendpacket); 
+				//패킷 전송
+				socket.close(); 
+			    //소켓 종료
+			}
 
 		} catch(IOException e){ //예외
 			e.printStackTrace(); //예외 상황 해결
