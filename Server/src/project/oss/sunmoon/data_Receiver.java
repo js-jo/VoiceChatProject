@@ -47,6 +47,7 @@ public class data_Receiver extends Thread
 				inSpeaker.drain();
 				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
 				pack.setLength(receiveBuffer.length);
+				//sock.close();
 			}
 		}
 		catch(Exception e){
