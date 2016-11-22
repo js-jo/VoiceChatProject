@@ -36,6 +36,7 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import java.awt.Toolkit;
 
 public class VoiceUI extends JFrame {
 
@@ -68,6 +69,8 @@ public class VoiceUI extends JFrame {
 	 * Create the frame.
 	 */
 	public VoiceUI() {
+		setTitle("Voice Chat");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(VoiceUI.class.getResource("/project/oss/sunmoon/micImage.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 400);
 		contentPane = new JPanel();
@@ -94,9 +97,19 @@ public class VoiceUI extends JFrame {
 		btnPanle.setLayout(new BorderLayout(0, 0));
 		
 		JButton connectBtn = new JButton("Connect");
+		connectBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("connect 누를때 이벤트");
+			}
+		});
 		btnPanle.add(connectBtn, BorderLayout.NORTH);
 		
 		JButton disconnectBtn = new JButton("Disconnect");
+		disconnectBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Disconnect누를때 이벤트");
+			}
+		});
 		btnPanle.add(disconnectBtn, BorderLayout.SOUTH);
 		
 		JPanel labelPanel = new JPanel();
