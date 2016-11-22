@@ -1,29 +1,26 @@
 package project.oss.sunmoon;
 
 import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
+import java.net.DatagramSocket;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-public class data_Receiver
+public class data_Receiver extends Thread
 {
-	public static final int port = 7000;
-	public static final String ipAddr = "192.168.219.104";
+	public static final int port = 7001;
+	public static final String ipAddr = "210.119.34.106";
 	public static final int Buffer_Size = 500;
-	private MulticastSocket sock;
+	private DatagramSocket sock;
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
-	byte[] inSound;
 	SourceDataLine inSpeaker = null;
 
 	public data_Receiver(){
 		try{
-			sock = new MulticastSocket(port);
-			sock.joinGroup(InetAddress.getByName(ipAddr));
-
+			sock = new DatagramSocket(port);
 			AudioFormat af = new AudioFormat(8000.0f,8,1,true,false);
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
 			inSpeaker = (SourceDataLine)AudioSystem.getLine(info);
@@ -39,9 +36,18 @@ public class data_Receiver
 		try{
 			receiveBuffer = new byte[Buffer_Size];
 			pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-			sock.receive(pack);
-			inSpeaker.write(receiveBuffer, 0, receiveBuffer.length);
-			inSpeaker.drain();
+			
+			while(true)
+			{
+				System.out.println("SADFASD");
+				sock.receive(pack);
+				byte[] bmsg = pack.getData();
+				String msg = new String(bmsg,0,pack.getLength());
+				inSpeaker.write(receiveBuffer, 0, receiveBuffer.length);
+				inSpeaker.drain();
+				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
+				pack.setLength(receiveBuffer.length);
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -52,10 +58,6 @@ public class data_Receiver
 	public static void main(String[] args)
 	{
 		data_Receiver receiver = new data_Receiver();
-
-		while(true)
-		{
-			receiver.receiveMessage();
-		}
+		receiver.receiveMessage();
 	}
 }
