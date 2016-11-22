@@ -83,24 +83,29 @@ public class VoiceUI extends JFrame {
 		northPanel.add(ipPanel);
 		ipPanel.setLayout(new BorderLayout(5, 10));
 		
-		iptext = new HintTextField("아이피를 입력해주세요");
+		iptext = new HintTextField("아이피를 입력해주세요.");
 		ipPanel.add(iptext);
 		iptext.setColumns(20);
 		
 		
 	
-		JPanel panel_5 = new JPanel();
-		ipPanel.add(panel_5, BorderLayout.EAST);
-		panel_5.setLayout(new BorderLayout(0, 0));
+		JPanel btnPanle = new JPanel();
+		ipPanel.add(btnPanle, BorderLayout.EAST);
+		btnPanle.setLayout(new BorderLayout(0, 0));
 		
 		JButton connectBtn = new JButton("Connect");
-		panel_5.add(connectBtn, BorderLayout.NORTH);
+		btnPanle.add(connectBtn, BorderLayout.NORTH);
 		
 		JButton disconnectBtn = new JButton("Disconnect");
-		panel_5.add(disconnectBtn, BorderLayout.SOUTH);
+		btnPanle.add(disconnectBtn, BorderLayout.SOUTH);
 		
-		JPanel panel_4 = new JPanel();
-		ipPanel.add(panel_4, BorderLayout.SOUTH);
+		JPanel labelPanel = new JPanel();
+		ipPanel.add(labelPanel, BorderLayout.SOUTH);
+		labelPanel.setLayout(new BorderLayout(0, 0));
+		
+		JLabel stateLabel = new JLabel("State");
+		stateLabel.setFont(new Font("굴림", Font.BOLD, 18));
+		labelPanel.add(stateLabel, BorderLayout.SOUTH);
 		
 		JPanel statePanle = new JPanel();
 		statePanle.setBorder(new LineBorder(new Color(0, 0, 0)));
