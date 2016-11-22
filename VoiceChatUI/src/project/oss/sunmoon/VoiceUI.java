@@ -26,6 +26,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.regex.Pattern;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
@@ -47,7 +48,10 @@ public class VoiceUI extends JFrame {
 	private JButton btnNewButton;
 	private JPanel panel_3;
 	private JLabel hint;
-	private boolean flag = false;		
+	private boolean flag = false;	
+	
+	private static final Pattern PATTERN = Pattern.compile(
+			"^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 	
 	/**
 	 * Launch the application.
@@ -97,17 +101,18 @@ public class VoiceUI extends JFrame {
 		btnPanle.setLayout(new BorderLayout(0, 0));
 		
 		JButton connectBtn = new JButton("Connect");
-		connectBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("connect 누를때 이벤트");
-			}
-		});
+
 		btnPanle.add(connectBtn, BorderLayout.NORTH);
 		
 		JButton disconnectBtn = new JButton("Disconnect");
+		disconnectBtn.setEnabled(false);
 		disconnectBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Disconnect누를때 이벤트");
+				
+				connectBtn.setEnabled(true);
+				disconnectBtn.setEnabled(false);
+				iptext.setEditable(true);
 			}
 		});
 		btnPanle.add(disconnectBtn, BorderLayout.SOUTH);
@@ -120,10 +125,44 @@ public class VoiceUI extends JFrame {
 		stateLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		labelPanel.add(stateLabel, BorderLayout.SOUTH);
 		
-		JPanel statePanle = new JPanel();
-		statePanle.setBorder(new LineBorder(new Color(0, 0, 0)));
-		contentPane.add(statePanle, BorderLayout.CENTER);
-		statePanle.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel statePanel = new JPanel();
+		statePanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		contentPane.add(statePanel, BorderLayout.CENTER);
+		statePanel.setLayout(new BoxLayout(statePanel, BoxLayout.Y_AXIS));
+		//statePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JLabel lblNewLabel = new JLabel("");
+		statePanel.add(lblNewLabel);
+		
+		connectBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String ip = iptext.getText();
+				if(PATTERN.matcher(ip).matches())
+				{
+					connectBtn.setEnabled(false);
+					disconnectBtn.setEnabled(true);
+					iptext.setEditable(false);
+					
+					//statePanel.removeAll();
+					JLabel lblState = new JLabel();
+					lblState.setText(iptext.getText() + "\n");
+					statePanel.add(lblState);
+					statePanel.validate();
+					statePanel.repaint();		
+				}
+				else
+				{
+					JLabel lblState = new JLabel();
+					lblState.setText("잘못입력.");
+					statePanel.add(lblState);
+					statePanel.validate();
+					statePanel.repaint();
+				}
+			}
+			
+			
+		});
 	}
 
 }
