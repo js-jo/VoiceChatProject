@@ -49,7 +49,7 @@ public class VoiceUI extends JFrame {
 	private JPanel panel_3;
 	private JLabel hint;
 	private boolean flag = false;	
-	
+	private Font font = new Font("돋움" , Font.BOLD,20);
 	private static final Pattern PATTERN = Pattern.compile(
 			"^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 	
@@ -106,10 +106,9 @@ public class VoiceUI extends JFrame {
 		
 		JButton disconnectBtn = new JButton("Disconnect");
 		disconnectBtn.setEnabled(false);
+		
 		disconnectBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Disconnect누를때 이벤트");
-				
 				connectBtn.setEnabled(true);
 				disconnectBtn.setEnabled(false);
 				iptext.setEditable(true);
@@ -129,10 +128,6 @@ public class VoiceUI extends JFrame {
 		statePanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		contentPane.add(statePanel, BorderLayout.CENTER);
 		statePanel.setLayout(new BoxLayout(statePanel, BoxLayout.Y_AXIS));
-		//statePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel lblNewLabel = new JLabel("");
-		statePanel.add(lblNewLabel);
 		
 		connectBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -145,17 +140,20 @@ public class VoiceUI extends JFrame {
 					disconnectBtn.setEnabled(true);
 					iptext.setEditable(false);
 					
-					//statePanel.removeAll();
+
 					JLabel lblState = new JLabel();
 					lblState.setText("Connected with " + iptext.getText() + "\n");
+					lblState.setFont(font);
 					statePanel.add(lblState);
 					statePanel.validate();
 					statePanel.repaint();		
 				}
 				else
 				{
+					statePanel.removeAll();
 					JLabel lblState = new JLabel();
 					lblState.setText("Non IP.");
+					lblState.setFont(font);
 					statePanel.add(lblState);
 					statePanel.validate();
 					statePanel.repaint();
