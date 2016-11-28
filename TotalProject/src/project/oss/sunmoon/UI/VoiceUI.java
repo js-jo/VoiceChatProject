@@ -154,17 +154,7 @@ public class VoiceUI extends JFrame {
 						public void run() {
 							// TODO Auto-generated method stub
 							receiver = new AudioServer(ip, statePanel, port);
-							while(!(receiver.getFlag()))
-							{
-								try {
-									Thread.sleep(1000);
-									receiver.receiveMessage();
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-							
+							receiver.receiveMessage();							
 						}
 					};
 					

@@ -15,13 +15,13 @@ import javax.swing.JPanel;
 
 public class AudioServer extends Thread
 {
-	private int port;
+	private static int port;
 	public static final int Buffer_Size = 500;
 	private DatagramSocket sock;
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
 	SourceDataLine inSpeaker = null;
-	private String hostAddress = null;
+	private static String hostAddress = null;
 	private boolean flag = false;
 	private JPanel statePanel;
 	
@@ -67,30 +67,29 @@ public class AudioServer extends Thread
 
 	public void receiveMessage()
 	{
-		try{
-			receiveBuffer = new byte[Buffer_Size];
-			pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+		try{			
 			String addresses = InetAddress.getLocalHost().getHostAddress();
-
 			
 			System.out.println(addresses);
 			System.out.println(hostAddress);
-			if(addresses.equals(hostAddress))
-			{
-				Font font = new Font("돋움" , Font.BOLD,20);
-				JLabel lblState = new JLabel();
-				lblState.setText("Connecting sucess with" + hostAddress + "\n");
-				lblState.setFont(font);
-				statePanel.add(lblState);
-				statePanel.validate();
-				statePanel.repaint();
+			
+			Font font = new Font("돋움" , Font.BOLD,20);
+			JLabel lblState = new JLabel();
+			lblState.setText("Connecting sucess with" + hostAddress + "\n");
+			lblState.setFont(font);
+			statePanel.add(lblState);
+			statePanel.validate();
+			statePanel.repaint();
 
-				setFlag(true);
-			}
+			setFlag(true);
+			
 			while(flag)
 			{
 				//System.out.println("SADFASD");
-				sock.receive(pack);
+				receiveBuffer = new byte[Buffer_Size];
+				pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+				
+				sock.receive(pack);								
 				System.out.println("여기서 무한루프 서버");
 				
 				byte[] bmsg = pack.getData();
@@ -108,9 +107,9 @@ public class AudioServer extends Thread
 		}
 	}
 
-	//	public static void main(String[] args)
-	//	{
-	//		AudioServer receiver = new AudioServer();
-	//		receiver.receiveMessage();
-	//	}
+		public static void main(String[] args)
+		{
+			AudioServer receiver = new AudioServer(hostAddress, null, port);
+			receiver.receiveMessage();
+		}
 }

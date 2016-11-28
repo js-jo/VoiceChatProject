@@ -52,12 +52,13 @@ public class AudioClient{
 	//	}
 
 	public AudioClient(String ipAddress, int port){
-		byte buffer[] = new byte[bufferSize];
+		//byte buffer[] = new byte[bufferSize];
 		DatagramSocket socket = null;
 		data = new ByteArrayOutputStream(); //바이트 데이터로 저장
 		//InputStream input = new ByteArrayInputStream(audio); //바이트 데이터를 읽음
 		stopaudioCapture = false; //오디오 멈춤
 		setPort(port);
+		
 		Runnable sendRunner = new Runnable() {
 
 			@Override
@@ -65,15 +66,16 @@ public class AudioClient{
 				// TODO Auto-generated method stub
 				try{
 					DatagramSocket socket = new DatagramSocket();
+					InetAddress ip = InetAddress.getByName(ipAddress); //전송할 ip번호
 					while(true)
-					{
-						//데이터 송수신 클래스
-						InetAddress ip = InetAddress.getByName(ipAddress); //전송할 ip번호
+					{						//						
 						//byte audio[] = out.getByteArray(); //전송할 음성 데이터
 						System.out.println("여기서 무한루프 클라이언트");
 						while(!stopaudioCapture){ //오디오 멈춤이 아니면
 							//int cnt = targetDataLine.read(buffer, 0, buffer.length); //버퍼 길이 읽음
 							//if(cnt > 0){ //버퍼 길이가 0보다 크면
+							String str = "ASDFASDF";
+							byte[] buffer = str.getBytes();
 							DatagramPacket sendpacket = new DatagramPacket(buffer, buffer.length, ip, port);
 							//주고 받을 데이터와 관련 클래스
 							socket.send(sendpacket); 
