@@ -20,7 +20,6 @@ public class AudioServer extends Thread
 	private DatagramSocket sock;
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
-	SourceDataLine inSpeaker = null;
 	private static String hostAddress = null;
 	private boolean flag = false;
 	private JPanel statePanel;
@@ -54,8 +53,6 @@ public class AudioServer extends Thread
 			sock = new DatagramSocket(port);
 			AudioFormat af = new AudioFormat(8000.0f,8,1,true,false);
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
-			inSpeaker = (SourceDataLine)AudioSystem.getLine(info);
-			inSpeaker.open(af);
 			setStatePanel(statePanel);
 			setHostAddress(hostAddress);
 			setPort(port);
@@ -65,7 +62,7 @@ public class AudioServer extends Thread
 		}
 	}
 
-	public void receiveMessage()
+	public void receiveAudio()
 	{
 		try{			
 			String addresses = InetAddress.getLocalHost().getHostAddress();
@@ -85,7 +82,6 @@ public class AudioServer extends Thread
 			
 			while(flag)
 			{
-				//System.out.println("SADFASD");
 				receiveBuffer = new byte[Buffer_Size];
 				pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 				
@@ -94,8 +90,6 @@ public class AudioServer extends Thread
 				
 				byte[] bmsg = pack.getData();
 				String msg = new String(bmsg,0,pack.getLength());
-				inSpeaker.write(receiveBuffer, 0, receiveBuffer.length);
-				inSpeaker.drain();
 				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
 				pack.setLength(receiveBuffer.length);
 			}
@@ -110,6 +104,6 @@ public class AudioServer extends Thread
 		public static void main(String[] args)
 		{
 			AudioServer receiver = new AudioServer(hostAddress, null, port);
-			receiver.receiveMessage();
+			receiver.receiveAudio();
 		}
 }

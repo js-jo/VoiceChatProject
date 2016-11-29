@@ -154,7 +154,7 @@ public class VoiceUI extends JFrame {
 						public void run() {
 							// TODO Auto-generated method stub
 							receiver = new AudioServer(ip, statePanel, port);
-							receiver.receiveMessage();							
+							receiver.receiveAudio();							
 						}
 					};
 					
