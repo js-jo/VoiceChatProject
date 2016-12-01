@@ -22,37 +22,19 @@ import javax.swing.JPanel;
 public class AudioServer extends Thread
 {
 	private static int port;
-	public static final int Buffer_Size = 500;
 	private DatagramSocket sock;
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
 	private static String hostAddress = null;
-	private boolean flag = false;
 	private JPanel statePanel;
 	final AudioFormat format = getFormat(); 
-	
+
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	public void setStatePanel(JPanel statePanel) {
 		this.statePanel = statePanel;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-	
-	public boolean getFlag() {
-		return flag;
-	}
-
-	public void setHostAddress(String hostAddress) {
-		this.hostAddress = hostAddress;
-	}
-
-	public String getHostAddress() {
-		return hostAddress;
 	}
 
 	public AudioServer(String hostAddress, JPanel statePanel, int port){
@@ -61,7 +43,6 @@ public class AudioServer extends Thread
 			AudioFormat af = new AudioFormat(8000.0f,8,1,true,false);
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
 			setStatePanel(statePanel);
-			setHostAddress(hostAddress);
 			setPort(port);
 		}
 		catch(Exception e){
@@ -73,29 +54,23 @@ public class AudioServer extends Thread
 	{
 		try{			
 			String addresses = InetAddress.getLocalHost().getHostAddress();
-			
-			System.out.println(addresses);
-			System.out.println(hostAddress);
-			
+
 			Font font = new Font("돋움" , Font.BOLD,20);
 			JLabel lblState = new JLabel();
-			lblState.setText("Connecting sucess with" + hostAddress + "\n");
+			lblState.setText("Connecting success with" + hostAddress + "\n");
 			lblState.setFont(font);
 			statePanel.add(lblState);
 			statePanel.validate();
 			statePanel.repaint();
 
-			setFlag(true);
-			
-			while(flag)
+			receiveBuffer = new byte[30000];
+			while(true)
 			{
-				//System.out.println("SADFASD");
-				//sock.receive(pack);	
 				try {
-					receiveBuffer = new byte[Buffer_Size];
+					
 					pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 					sock.receive(pack);								
-					
+
 					byte audio[] = pack.getData();
 					InputStream input = new ByteArrayInputStream(audio);
 					final AudioFormat format = getFormat();
@@ -104,57 +79,39 @@ public class AudioServer extends Thread
 					final SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
 					line.open(format);
 					line.start();
-					Runnable runner = new Runnable() {
-						int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
-						byte buffer[] = new byte[bufferSize];
-
-						public void run() {
-							try {
-								int count;
-								while ((count = ais.read(buffer, 0, buffer.length)) != -1) {
-									if (count > 0) {
-										line.write(buffer, 0, count);
-									}
-								}
-								line.drain();
-								line.close();
-							} catch (IOException e) {
-								System.err.println("I/O problems: " + e);
-								System.exit(-3);
-							}
+					
+					int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
+					byte buffer[] = new byte[bufferSize];
+					
+					try {
+						int count;
+						count = ais.read(buffer, 0, buffer.length);
+						if (count > 0) {
+							line.write(buffer, 0, count);
+							
+							JLabel sendState = new JLabel();
+							lblState.setText("Get voice..." + "\n");
+							lblState.setFont(font);
+							statePanel.add(sendState);
+							statePanel.validate();
+							statePanel.repaint();
 						}
-					};
-					Thread playThread = new Thread(runner);
-					playThread.start();
+					} catch (IOException e) {
+						System.err.println("I/O problems: " + e);
+						System.exit(-3);
+					}
 				} catch (LineUnavailableException e) {
 					System.err.println("Line unavailable: " + e);
 					System.exit(-4);
 				}
-//				String msg = new String(bmsg,0,pack.getLength());
-//				inSpeaker.write(bmsg, 0, bmsg.length);
-//				inSpeaker.drain();
-//				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
-//				pack.setLength(receiveBuffer.length);
-
-				receiveBuffer = new byte[Buffer_Size];
-				pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-				
-				sock.receive(pack);								
-				System.out.println("여기서 무한루프 서버");
-				
-				byte[] bmsg = pack.getData();
-				String msg = new String(bmsg,0,pack.getLength());
-				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
-				pack.setLength(receiveBuffer.length);
 			}
-			sock.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	private AudioFormat getFormat() {
 		float sampleRate = 8000;
 		int sampleSizeInBits = 8;

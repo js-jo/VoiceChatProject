@@ -101,8 +101,6 @@ public class VoiceUI extends JFrame {
 		ipPanel.add(iptext);
 		iptext.setColumns(20);
 		
-		
-	
 		JPanel btnPanle = new JPanel();
 		ipPanel.add(btnPanle, BorderLayout.EAST);
 		btnPanle.setLayout(new BorderLayout(0, 0));

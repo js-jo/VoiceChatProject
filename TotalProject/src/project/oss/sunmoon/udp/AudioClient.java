@@ -28,19 +28,10 @@ public class AudioClient{
 	private AudioFormat getFormat = getFormat(); //오디오 재생형식 지정
 	ByteArrayOutputStream data; //바이트 데이터
 	TargetDataLine targetDataLine; //오디오 출력
-	private boolean flag = false; //연결
 	private int port;
 
 	public void setPort(int port) {
 		this.port = port;
-	}
-
-	public boolean isFlag() {
-		return flag;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
 	}
 
 	private AudioFormat getFormat() {
@@ -73,21 +64,16 @@ public class AudioClient{
 						InetAddress ip = InetAddress.getByName(ipAddress); //전송할 ip번호
 						while(true)
 						{							
-							System.out.println("여기서 무한루프 클라이언트");
 							while(!stopaudioCapture){ //오디오 멈춤이 아니면
 								int cnt = line.read(buffer, 0, buffer.length); //버퍼 길이 읽음
-								if(cnt > 0){ //버퍼 길이가 0보다 크면
+								if(cnt > 0){
 									DatagramPacket sendpacket = new DatagramPacket(buffer, buffer.length, ip, port);
-									//주고 받을 데이터와 관련 클래스
 									socket.send(sendpacket); 
-									//패킷 전송
 								}
 							}
-							socket.close(); 
-							//소켓 종료
 						}
 
-					}catch(IOException e){ //예외 처리
+					}catch(IOException e){
 						e.printStackTrace();
 					}
 				}
@@ -97,7 +83,6 @@ public class AudioClient{
 			thread.start();
 
 		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
