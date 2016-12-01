@@ -1,15 +1,21 @@
 package project.oss.sunmoon.udp;
 
 import java.awt.Font;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -24,6 +30,7 @@ public class AudioServer extends Thread
 	private static String hostAddress = null;
 	private boolean flag = false;
 	private JPanel statePanel;
+	final AudioFormat format = getFormat(); 
 	
 	public void setPort(int port) {
 		this.port = port;
@@ -86,18 +93,51 @@ public class AudioServer extends Thread
 			while(flag)
 			{
 				//System.out.println("SADFASD");
-				receiveBuffer = new byte[Buffer_Size];
-				pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-				
-				sock.receive(pack);								
-				System.out.println("여기서 무한루프 서버");
-				
-				byte[] bmsg = pack.getData();
-				String msg = new String(bmsg,0,pack.getLength());
-				inSpeaker.write(receiveBuffer, 0, receiveBuffer.length);
-				inSpeaker.drain();
-				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
-				pack.setLength(receiveBuffer.length);
+				//sock.receive(pack);	
+				try {
+					receiveBuffer = new byte[Buffer_Size];
+					pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+					sock.receive(pack);								
+					
+					byte audio[] = pack.getData();
+					InputStream input = new ByteArrayInputStream(audio);
+					final AudioFormat format = getFormat();
+					final AudioInputStream ais = new AudioInputStream(input, format, audio.length / format.getFrameSize());
+					DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+					final SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+					line.open(format);
+					line.start();
+					Runnable runner = new Runnable() {
+						int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
+						byte buffer[] = new byte[bufferSize];
+
+						public void run() {
+							try {
+								int count;
+								while ((count = ais.read(buffer, 0, buffer.length)) != -1) {
+									if (count > 0) {
+										line.write(buffer, 0, count);
+									}
+								}
+								line.drain();
+								line.close();
+							} catch (IOException e) {
+								System.err.println("I/O problems: " + e);
+								System.exit(-3);
+							}
+						}
+					};
+					Thread playThread = new Thread(runner);
+					playThread.start();
+				} catch (LineUnavailableException e) {
+					System.err.println("Line unavailable: " + e);
+					System.exit(-4);
+				}
+//				String msg = new String(bmsg,0,pack.getLength());
+//				inSpeaker.write(bmsg, 0, bmsg.length);
+//				inSpeaker.drain();
+//				System.out.println("수신내용 : "+ pack.getAddress().getHostAddress() + msg);
+//				pack.setLength(receiveBuffer.length);
 			}
 			sock.close();
 		}
@@ -106,10 +146,19 @@ public class AudioServer extends Thread
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	private AudioFormat getFormat() {
+		float sampleRate = 8000;
+		int sampleSizeInBits = 8;
+		int channels = 1;
+		boolean signed = true;
+		boolean bigEndian = true;
+		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
+	}
 
-		public static void main(String[] args)
-		{
-			AudioServer receiver = new AudioServer(hostAddress, null, port);
-			receiver.receiveMessage();
-		}
+//		public static void main(String[] args)
+//		{
+//			AudioServer receiver = new AudioServer(hostAddress, null, port);
+//			receiver.receiveMessage();
+//		}
 }

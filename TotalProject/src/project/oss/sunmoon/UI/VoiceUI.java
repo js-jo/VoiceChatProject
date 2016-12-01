@@ -111,7 +111,7 @@ public class VoiceUI extends JFrame {
 
 		btnPanle.add(connectBtn, BorderLayout.NORTH);
 		
-		JButton disconnectBtn = new JButton("Disconnect");
+		JButton disconnectBtn = new JButton("Exit");
 		disconnectBtn.setEnabled(false);
 		btnPanle.add(disconnectBtn, BorderLayout.SOUTH);
 		
