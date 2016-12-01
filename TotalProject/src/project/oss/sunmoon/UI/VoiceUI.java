@@ -139,7 +139,6 @@ public class VoiceUI extends JFrame {
 					iptext.setEditable(false);
 
 					JLabel lblState = new JLabel();
-					lblState.setText("Connected with " + iptext.getText() + "\n");
 					lblState.setFont(font);
 					statePanel.add(lblState);
 					statePanel.validate();
@@ -171,7 +170,6 @@ public class VoiceUI extends JFrame {
 					statePanel.add(lblState);
 					statePanel.validate();
 					statePanel.repaint();
-					
 				}
 			}
 			

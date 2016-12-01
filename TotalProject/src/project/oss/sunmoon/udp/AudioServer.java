@@ -25,9 +25,19 @@ public class AudioServer extends Thread
 	private DatagramSocket sock;
 	private DatagramPacket pack;
 	private byte[] receiveBuffer;
-	private static String hostAddress = null;
+	private String hostAddress = null;
 	private JPanel statePanel;
+	private boolean first = true;
 	final AudioFormat format = getFormat(); 
+
+
+	public  String getHostAddress() {
+		return hostAddress;
+	}
+
+	public void setHostAddress(String hostAddress) {
+		this.hostAddress = hostAddress;
+	}
 
 	public void setPort(int port) {
 		this.port = port;
@@ -43,6 +53,7 @@ public class AudioServer extends Thread
 			AudioFormat af = new AudioFormat(8000.0f,8,1,true,false);
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
 			setStatePanel(statePanel);
+			setHostAddress(hostAddress);
 			setPort(port);
 		}
 		catch(Exception e){
@@ -57,7 +68,7 @@ public class AudioServer extends Thread
 
 			Font font = new Font("µ¸¿ò" , Font.BOLD,20);
 			JLabel lblState = new JLabel();
-			lblState.setText("Connecting success with" + hostAddress + "\n");
+			lblState.setText("Waiting to connect to" + hostAddress + "\n");
 			lblState.setFont(font);
 			statePanel.add(lblState);
 			statePanel.validate();
@@ -67,7 +78,7 @@ public class AudioServer extends Thread
 			while(true)
 			{
 				try {
-					
+
 					pack = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 					sock.receive(pack);								
 
@@ -79,15 +90,27 @@ public class AudioServer extends Thread
 					final SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
 					line.open(format);
 					line.start();
-					
+
 					int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
 					byte buffer[] = new byte[bufferSize];
-					
+
 					try {
 						int count;
 						count = ais.read(buffer, 0, buffer.length);
 						if (count > 0) {
 							line.write(buffer, 0, count);
+
+							if(first)
+							{
+								JLabel chatState = new JLabel();
+								lblState.setText("Start Voice chat" + "\n");
+								lblState.setFont(font);
+								statePanel.add(chatState);
+								statePanel.validate();
+								statePanel.repaint();
+								first = false;
+								Thread.sleep(1000);
+							}
 							
 							JLabel sendState = new JLabel();
 							lblState.setText("Get voice..." + "\n");
